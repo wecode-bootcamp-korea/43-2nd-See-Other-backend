@@ -12,12 +12,13 @@ const startServer = async () => {
     .catch((error) => {
       console.error("Error during Data Source initialization", error);
     });
-
   const PORT = process.env.PORT;
+  const IPADDRESS = process.env.IPADDRESS;
+  const LOCALADDRESS = process.env.LOCALADDRESS;
 
-  app.listen(PORT, () => {
+  app.listen(PORT, LOCALADDRESS, () => {
     console.log(
-      `🚀🚀🚀 Server Listening to request on 127.0.0.1:${PORT} 🚀🚀🚀`
+      `💕💕💕 Server Listening to request on ${LOCALADDRESS}:${PORT} 💕💕💕`
     );
   });
 };
