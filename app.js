@@ -4,11 +4,16 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 
+const route = require("./api/routes");
+const { globalErrorHandler } = require("./api/utils/error");
+
 const createApp = () => {
   const app = express();
+
   app.use(cors());
   app.use(morgan("combined"));
   app.use(express.json());
+  app.use(route);
 
   app.get("/ping", (req, res) => {
     res.status(200).json({ message: "pong" });
@@ -21,6 +26,8 @@ const createApp = () => {
 
     next(err);
   });
+
+  app.use(globalErrorHandler);
 
   return app;
 };
