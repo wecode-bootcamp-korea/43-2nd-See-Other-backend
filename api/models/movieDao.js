@@ -7,6 +7,7 @@ const getMovies = async (movieStatusesId, filter) => {
     m.name,
     m.korean_name AS koreanName,
     m.summary,
+    mIU.image_url AS imageUrl,
     m.average_rating AS averageRate, 
     m.grade, 
     m.reservation_rate AS reservationRate, 
@@ -21,8 +22,21 @@ const getMovies = async (movieStatusesId, filter) => {
     movies AS m
     JOIN reservation_options AS r ON m.id = r.movies_id
     JOIN hall_types AS h ON r.hall_types_id = h.id 
+    JOIN movie_image_urls AS mIU ON m.id = mIU.movies_id
   WHERE m.movie_statuses_id = ?
-  GROUP BY m.id
+  GROUP BY
+    m.id,
+    m.name,
+    m.korean_name,
+    m.summary,
+    mIU.image_url,
+    m.average_rating,
+    m.grade,
+    m.reservation_rate,
+    m.running_time,
+    m.opening_date,
+    m.closing_date,
+    m.movie_statuses_id
   ORDER BY ${filter} DESC
 ;
 `,
