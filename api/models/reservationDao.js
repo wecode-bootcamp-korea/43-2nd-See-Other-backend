@@ -1,4 +1,5 @@
 const dbDataSource = require("./dataSource");
+const { getEndTime } = require("../utils/get-endtime");
 
 const listMovieOptions = async (whereClause) => {
   return await dbDataSource.query(
@@ -139,11 +140,160 @@ const listSeatOptions = async (whereClause) => {
   );
 };
 
+const postReservation = async (
+  userId,
+  seatNumber,
+  orderStatusesId,
+  reservationOptionsId,
+  reservationNumber
+) => {
+  await dbDataSource.query(
+    `
+      INSERT INTO orders (reservation_number, seat_number, order_statuses_id, reservation_options_id, users_id) 
+      VALUES (?, ?, ?, ?, ?)
+      `,
+    [
+      reservationNumber,
+      seatNumber,
+      orderStatusesId,
+      reservationOptionsId,
+      userId,
+    ]
+  );
+};
+
+const getReservation = async (userId) => {
+  const result = await dbDataSource.query(
+    `
+    SELECT orders.reservation_number as reservationNumber, movies.name as movieName, cinema_names.name as cinemaName, hall_types.name as roomNumber, orders.seat_number as seatNumber, dates.date, times.start_time as startTime, movies.running_time as runningTime
+    FROM reservation_options
+    JOIN movies
+    ON reservation_options.movies_id = movies.id
+    JOIN cinema_names
+    ON reservation_options.cinema_names_id = cinema_names.id
+    JOIN dates
+    ON reservation_options.dates_id = dates.id
+    JOIN times
+    ON reservation_options.times_id = times.id
+    JOIN screening_rooms
+    ON reservation_options.screening_rooms_id = screening_rooms.id
+    JOIN orders
+    ON orders.reservation_options_id = reservation_options.id
+    JOIN hall_types
+    ON reservation_options.hall_types_id = hall_types.id
+    WHERE orders.users_id = ?
+    `,
+    [userId]
+  );
+  const startTime = result[0].startTime;
+  const runningTime = result[0].runningTime;
+  const endTime = getEndTime(startTime, runningTime);
+  return { result, endTime };
+};
+
+const getReservationOptionId = async (
+  dateId,
+  timeId,
+  movieId,
+  cinemaNameId,
+  screeningRoomId,
+  hallTypeId
+) => {
+  const result = await dbDataSource.query(
+    `SELECT id 
+      FROM reservation_options
+      WHERE dates_id = ?
+      AND times_id = ?
+      AND movies_id = ?
+      AND cinema_names_id = ?
+      AND screening_rooms_id = ?
+      AND hall_types_id = ?
+      `,
+    [dateId, timeId, movieId, cinemaNameId, screeningRoomId, hallTypeId]
+  );
+  return result;
+};
+
+const getDateId = async (date) => {
+  return await dbDataSource.query(
+    `
+    SELECT id
+    FROM dates
+    WHERE dates.date = ?
+    `,
+    [date]
+  );
+};
+
+const getTimeId = async (time) => {
+  return await dbDataSource.query(
+    `
+    SELECT id
+    FROM times
+    WHERE times.start_time = ?
+    `,
+    [time]
+  );
+};
+
+const getMovieId = async (movie) => {
+  return await dbDataSource.query(
+    `
+    SELECT id
+    FROM movies
+    WHERE movies.name = ?
+    `,
+    [movie]
+  );
+};
+
+const getCinemaNameId = async (cinemaName) => {
+  return await dbDataSource.query(
+    `
+    SELECT id
+    FROM cinema_names
+    WHERE cinema_names.name = ?
+    `,
+    [cinemaName]
+  );
+};
+
+const getScreeningRoomId = async (screeningRoom) => {
+  return await dbDataSource.query(
+    `
+    SELECT id
+    FROM screening_rooms
+    WHERE screening_rooms.room_number = ?
+    `,
+    [screeningRoom]
+  );
+};
+
+const getHallTypeId = async (hallType) => {
+  return await dbDataSource.query(
+    `
+    SELECT id
+    FROM hall_types
+    WHERE hall_types.name = ?
+    `,
+    [hallType]
+  );
+};
+
 module.exports = {
+  postReservation,
+  getReservation,
   listMovieOptions,
   listRegionOptions,
   listHallTypeOptions,
   listDateOptions,
   listTimes,
   listSeatOptions,
+  getReservationOptionId,
+  getDateId,
+  getTimeId,
+  getMovieId,
+  getCinemaNameId,
+  getScreeningRoomId,
+  getHallTypeId,
 };

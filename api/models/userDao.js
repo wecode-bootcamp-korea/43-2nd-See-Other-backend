@@ -33,8 +33,20 @@ const getUserId = async (kakaoId) => {
   return result.id;
 };
 
+const getUserInfo = async (kakaoId) => {
+  const result = await dbDataSource.query(
+    `
+    SELECT nickname, age_range
+    FROM users
+    WHERE users.social_id = ?`,
+    [kakaoId]
+  );
+  return result;
+};
+
 module.exports = {
   kakakoSignIn,
   checkKakaoId,
   getUserId,
+  getUserInfo,
 };

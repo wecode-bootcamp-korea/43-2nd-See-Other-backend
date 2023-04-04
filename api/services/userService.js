@@ -32,8 +32,11 @@ const kakaoSignIn = async (kakaoToken) => {
     statusCode = 201;
   }
   const getUserId = await userDao.getUserId(kakaoId);
+  const getUserInfo = await userDao.getUserInfo(kakaoId);
+  const userNickname = getUserInfo[0].nickname;
+  const userAgeRange = getUserInfo[0].age_range;
   const accessToken = await jwt.sign({ id: getUserId }, process.env.JWT_SECRET);
-  return { accessToken, statusCode };
+  return { accessToken, statusCode, userAgeRange, userNickname };
 };
 module.exports = {
   kakaoSignIn,

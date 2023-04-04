@@ -9,8 +9,11 @@ const kakaoSignIn = catchAsync(async (req, res) => {
     error.statusCode = 400;
     throw error;
   }
-  const { statusCode, accessToken } = await userService.kakaoSignIn(kakaoToken);
-  return res.status(statusCode).json({ accessToken });
+  const { statusCode, accessToken, userAgeRange, userNickname } =
+    await userService.kakaoSignIn(kakaoToken);
+  return res
+    .status(statusCode)
+    .json({ accessToken, userAgeRange, userNickname });
 });
 
 module.exports = {
