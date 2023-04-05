@@ -16,9 +16,9 @@ const startServer = async () => {
   const IPADDRESS = process.env.IPADDRESS;
   const LOCALADDRESS = process.env.LOCALADDRESS;
 
-  app.listen(PORT, LOCALADDRESS, () => {
+  app.listen(PORT, IPADDRESS, () => {
     console.log(
-      `💕💕💕 Server Listening to request on ${LOCALADDRESS}:${PORT} 💕💕💕`
+      `💕💕💕 Server Listening to request on ${IPADDRESS}:${PORT} 💕💕💕`
     );
   });
 };

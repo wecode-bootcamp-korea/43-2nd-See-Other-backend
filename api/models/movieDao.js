@@ -29,7 +29,21 @@ const getMovies = async (movieStatusesId, filter) => {
     [movieStatusesId]
   );
 };
+//이미지
+const getMoviedetails = async (movieId) => {
+  return await dbDataSource.query(
+    `
+    SELECT movies.korean_name as koreanName, movies.name as englishName, movies.summary, movies.average_rating as averageRating, movies.reservation_rate as reservationRate, movie_image_urls.image_url as imageUrl
+    FROM movies
+    JOIN movie_image_urls
+    ON movie_image_urls.movies_id = movies.id
+    WHERE movies.id = ?
+    `,
+    [movieId]
+  );
+};
 
 module.exports = {
   getMovies,
+  getMoviedetails,
 };
