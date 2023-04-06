@@ -25,7 +25,23 @@ const getTimes = catchAsync(async (req, res) => {
   return res.status(200).json({ getTimes });
 });
 
+const getSeats = catchAsync(async (req, res) => {
+  const { movie, cinemaName, hallType, date, time, screeningRoom } = req.query;
+
+  const getSeats = await reservationService.getSeats(
+    movie,
+    cinemaName,
+    hallType,
+    date,
+    time,
+    screeningRoom
+  );
+
+  return res.status(200).json({ getSeats });
+});
+
 module.exports = {
   getOptions,
   getTimes,
+  getSeats,
 };

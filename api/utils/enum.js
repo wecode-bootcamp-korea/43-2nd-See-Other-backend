@@ -28,10 +28,25 @@ const dateTypes = Object.freeze({
   "2023.4.9": 3,
 });
 
+const timeTypes = Object.freeze({
+  "13:00": 1,
+  "16:00": 2,
+  "20:00": 3,
+});
+
+const screeningRoomTypes = Object.freeze({
+  1: 1,
+  2: 2,
+  3: 3,
+  4: 4,
+});
+
 module.exports = {
   SocialType,
   movieTypes,
   cinemaNameTypes,
   hallTypeTypes,
   dateTypes,
+  timeTypes,
+  screeningRoomTypes,
 };

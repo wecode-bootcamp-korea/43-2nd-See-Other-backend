@@ -117,10 +117,33 @@ const listTimes = async (upperWhereClause, lowerWhereClause) => {
   );
 };
 
+const listSeatOptions = async (whereClause) => {
+  return await dbDataSource.query(
+    `SELECT
+        (SELECT
+          id
+        FROM
+          reservation_options AS ro
+        ${whereClause}) AS id,
+        h.total_seats AS totalSeats,
+        h.total_seats - COALESCE(COUNT(rs.orders_id), 0) AS remainingSeats,
+        JSON_ARRAYAGG(rs.seat) AS reservedSeats,
+        h.price AS price
+    FROM reservation_options AS ro
+    JOIN hall_types AS h ON h.id = ro.hall_types_id
+    LEFT JOIN orders AS o ON o.reservation_options_id = ro.id
+    LEFT JOIN reserved_seats AS rs ON rs.orders_id = o.id
+    ${whereClause}
+    GROUP BY ro.id;
+    `
+  );
+};
+
 module.exports = {
   listMovieOptions,
   listRegionOptions,
   listHallTypeOptions,
   listDateOptions,
   listTimes,
+  listSeatOptions,
 };

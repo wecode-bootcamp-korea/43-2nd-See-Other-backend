@@ -31,8 +31,28 @@ const lowerWhereClauseBuilder = (movie, cinemaName, hallType, date) => {
   `;
 };
 
+const movieSeatBuilder = (
+  movie,
+  cinemaName,
+  hallType,
+  date,
+  time,
+  screeningRoom
+) => {
+  return `WHERE movies_id = ${type.movieTypes[movie.toUpperCase()]}
+    AND cinema_names_id = ${type.cinemaNameTypes[cinemaName.toUpperCase()]}
+    AND hall_types_id = ${type.hallTypeTypes[hallType.toUpperCase()]}
+    AND dates_id = ${type.dateTypes[date.toUpperCase()]}
+    AND times_id = ${type.timeTypes[time.toUpperCase()]}
+    AND screening_rooms_id = ${
+      type.screeningRoomTypes[screeningRoom.toUpperCase()]
+    }
+  `;
+};
+
 module.exports = {
   movieOptionBuilder,
   upperWhereClauseBuilder,
   lowerWhereClauseBuilder,
+  movieSeatBuilder,
 };
