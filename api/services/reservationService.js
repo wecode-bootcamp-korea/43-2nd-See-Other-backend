@@ -3,6 +3,7 @@ const {
   movieOptionBuilder,
   upperWhereClauseBuilder,
   lowerWhereClauseBuilder,
+  movieSeatBuilder,
 } = require("../models/builder");
 
 const getOptions = async (movie, cinemaName, hallType, date) => {
@@ -49,7 +50,30 @@ const getTimes = async (movie, cinemaName, hallType, date) => {
   return getTimes;
 };
 
+const getSeats = async (
+  movie,
+  cinemaName,
+  hallType,
+  date,
+  time,
+  screeningRoom
+) => {
+  const whereClause = await movieSeatBuilder(
+    movie,
+    cinemaName,
+    hallType,
+    date,
+    time,
+    screeningRoom
+  );
+
+  const getSeats = await reservationDao.listSeatOptions(whereClause);
+
+  return getSeats;
+};
+
 module.exports = {
   getOptions,
   getTimes,
+  getSeats,
 };
