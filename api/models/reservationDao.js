@@ -84,9 +84,43 @@ const listDateOptions = async (whereClause) => {
   );
 };
 
+const listTimes = async (upperWhereClause, lowerWhereClause) => {
+  return await dbDataSource.query(
+    `SELECT
+      s.room_number AS screeningRooms,
+      h.name AS hallTypes,
+      h.total_seats AS totalSeats,
+      m.running_time AS runningTime,
+      (SELECT JSON_ARRAYAGG(JSON_OBJECT(
+        'startTime', jt.start_time,
+        'remainingSeats', jt.remaining_seats
+      )) AS times
+    FROM (
+      SELECT t.start_time, h.total_seats - COALESCE(COUNT(rs.orders_id), 0) AS remaining_seats
+      FROM times AS t
+    LEFT JOIN reservation_options ro ON ro.times_id = t.id
+    LEFT JOIN hall_types h ON h.id = ro.hall_types_id
+    LEFT JOIN orders o ON o.reservation_options_id = ro.id
+    LEFT JOIN reserved_seats rs ON rs.orders_id = o.id
+    ${upperWhereClause}
+    GROUP BY t.start_time, h.total_seats
+          ) AS jt) AS times
+    FROM
+      reservation_options AS r
+    JOIN hall_types AS h ON h.id = r.hall_types_id
+    JOIN movies AS m ON m.id = r.movies_id
+    JOIN times AS t ON t.id = r.times_id
+    JOIN screening_rooms AS s ON r.screening_rooms_id = s.id
+    ${lowerWhereClause}
+    GROUP by s.room_number
+    `
+  );
+};
+
 module.exports = {
   listMovieOptions,
   listRegionOptions,
   listHallTypeOptions,
   listDateOptions,
+  listTimes,
 };
