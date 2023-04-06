@@ -10,6 +10,12 @@ const getMovies = async (movieStatusesId, filter) => {
   return movies;
 };
 
+const getMoviedetails = async (movieId) => {
+  const movieList = await movieDao.getMoviedetails(movieId);
+  return movieList;
+};
+
 module.exports = {
   getMovies,
+  getMoviedetails,
 };
