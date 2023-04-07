@@ -165,7 +165,7 @@ const postReservation = async (
 const getReservation = async (userId) => {
   const result = await dbDataSource.query(
     `
-    SELECT orders.reservation_number as reservationNumber, movies.name as movieName, cinema_names.name as cinemaName, hall_types.name as roomNumber, orders.seat_number as seatNumber, dates.date, times.start_time as startTime, movies.running_time as runningTime
+    SELECT orders.reservation_number as reservationNumber, movies.korean_name as movieName, cinema_names.name as cinemaName, hall_types.name as roomNumber, orders.seat_number as seatNumber, dates.date, times.start_time as startTime, movies.running_time as runningTime, movie_image_urls.image_url
     FROM reservation_options
     JOIN movies
     ON reservation_options.movies_id = movies.id
@@ -181,6 +181,8 @@ const getReservation = async (userId) => {
     ON orders.reservation_options_id = reservation_options.id
     JOIN hall_types
     ON reservation_options.hall_types_id = hall_types.id
+    JOIN movie_image_urls
+    ON movie_image_urls.movies_id = movies.id
     WHERE orders.users_id = ?
     `,
     [userId]

@@ -16,7 +16,6 @@ const createReview = catchAsync(async (req, res) => {
     error.statusCode = 400;
     throw error;
   }
-
   await reviewService.createReview(accessToken, rating, comment, movieId);
   return res.status(201).json({ message: "CREATE REVIEW SUCCESS" });
 });

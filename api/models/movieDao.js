@@ -43,7 +43,6 @@ const getMovies = async (movieStatusesId, filter) => {
     [movieStatusesId]
   );
 };
-//이미지
 const getMoviedetails = async (movieId) => {
   return await dbDataSource.query(
     `

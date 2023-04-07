@@ -91,6 +91,14 @@ const postReservation = async (
     await reservationDao.getScreeningRoomId(screeningRoom)
   )[0].id;
   const hallTypeId = (await reservationDao.getHallTypeId(hallType))[0].id;
+  const reservationNumber =
+    String(dateId) +
+    String(timeId) +
+    String(movieId) +
+    String(cinemaNameId) +
+    String(screeningRoomId) +
+    String(hallTypeId) +
+    String(userId);
   const reservationOptionsId = (
     await reservationDao.getReservationOptionId(
       dateId,

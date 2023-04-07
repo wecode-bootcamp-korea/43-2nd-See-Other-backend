@@ -1,7 +1,6 @@
 const dbDataSource = require("./dataSource");
 
 const createReview = async (userId, rating, comment, movieId) => {
-  // await dbDataSource.query(`set FOREIGN_KEY_CHECKS = 0`);
   await dbDataSource.query(
     `
     INSERT INTO movie_reviews (
@@ -12,9 +11,8 @@ const createReview = async (userId, rating, comment, movieId) => {
     `,
     [userId, rating, comment, movieId]
   );
-  // await dbDataSource.query(`set FOREIGN_KEY_CHECKS = 1`);
 
-  await dbDataSource.query(
+  return await dbDataSource.query(
     `
     UPDATE movies
     SET average_rating = (

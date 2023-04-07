@@ -13,6 +13,7 @@ const createReview = async (accessToken, rating, comment, movieId) => {
     error.statusCode = 400;
     throw error;
   }
+
   return await reviewDao.createReview(userId, rating, comment, movieId);
 };
 

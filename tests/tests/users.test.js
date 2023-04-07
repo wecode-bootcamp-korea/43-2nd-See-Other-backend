@@ -328,6 +328,5 @@ describe("Movie Review Delete", () => {
       });
 
     expect(response.statusCode).toEqual(204);
-    // expect({ message: "DELETE REVIEW SUCCESS" });
   });
 });
